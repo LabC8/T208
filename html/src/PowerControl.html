@@ -1,0 +1,1151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>src.PowerControl API documentation</title>
+<meta name="description" content="Control script for Geekworm T208 UPS for Jatson Nano (https://wiki.geekworm.com/T208).
+Some functions were get from …" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>src.PowerControl</code></h1>
+</header>
+<section id="section-intro">
+<p>Control script for Geekworm T208 UPS for Jatson Nano (<a href="https://wiki.geekworm.com/T208">https://wiki.geekworm.com/T208</a>).
+Some functions were get from <a href="https://wiki.geekworm.com/T208-Software.">https://wiki.geekworm.com/T208-Software.</a> Strongly recommended to read the webpage before using this script.
+The script periodecly checks if the device is plugged to the mains, and it's battary capacity and voltage.
+The script turns off power of Jetson when T208 battary capacity reaches setting low level and it lost a power outage.
+Information about the state of device, if necessary, available by UDP.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">#!/usr/bin/env python3
+&#34;&#34;&#34;
+Control script for Geekworm T208 UPS for Jatson Nano (https://wiki.geekworm.com/T208).
+Some functions were get from https://wiki.geekworm.com/T208-Software. Strongly recommended to read the webpage before using this script.
+The script periodecly checks if the device is plugged to the mains, and it&#39;s battary capacity and voltage.
+The script turns off power of Jetson when T208 battary capacity reaches setting low level and it lost a power outage.
+Information about the state of device, if necessary, available by UDP.
+&#34;&#34;&#34;
+
+# Set Python3 as a default version: https://raspberry-valley.azurewebsites.net/Python-Default-Version/
+# This script had got an x-attribut and was added into /etc/sudoers file with &#39;sudo visudo&#39;
+# sudo pip3 install smbus
+# pip3 install jsonschema
+
+import sys
+import os
+import logging
+import time
+import RPi.GPIO as GPIO
+import struct
+import socket
+import json
+import smbus
+import jsonschema
+from os import path
+from enum import Enum, auto
+from threading import Thread
+from tendo import singleton
+from typing import Union
+
+SHOW_INFO = True
+SLEEP_TIME = 5
+CRITICAL_CAPACITY = 20
+UDP_PORT = 7777
+UDP_HOST = &#39;&#39;
+
+GPIO_PORT = 4
+
+I2C_ADDRESS = 0x36
+
+
+# States of Power Loss Detection led
+class PLDLedEnumClass (Enum):
+    &#34;&#34;&#34;PLDLedEnumClass -- Class defines state of Power Loss Detection (PLD) LED
+    off -- T208 is plugged to the mains
+    red -- T208 is not plugged to the mains
+    blink -- It is undocumented state of plugged T208. Happens occasionally, frequient after a power outage
+    &#34;&#34;&#34;
+    off = 1
+    red = 2
+    blink = 3
+
+
+class CfgReadResultEnumClass (Enum):
+    &#34;&#34;&#34;CfgReadResultEnumClass -- Class defines the state of reading the file of configuration
+    &#34;&#34;&#34;
+    is_exist = auto()
+    is_not_exist = auto()
+    is_broken = auto()
+    is_incorrect = auto()
+    unknown = auto()
+
+
+# global fullfilename
+&#34;&#34;&#34; Global variables of the configuration
+ShowInfo -- Flag of logging to the console
+SleepTime -- Time of holding main control loop after reading information about T208
+CriticalCapacity -- T208 UPS Low Battery Level
+UdpPort -- Port of the UDP-server
+UdpHost -- Address of the UDP-server
+&#34;&#34;&#34;
+global ShowInfo, SleepTime, CriticalCapacity
+global UdpPort, UdpHost
+
+global TheLogger
+
+
+def read_config(_path: str) -&gt; Union[CfgReadResultEnumClass, str]:
+    &#34;&#34;&#34;read_config  -- Read initial settings. Configuration file has a name &#34;PowerCtrl.cfg&#34; and puts into directory, defined by argument &#34;path&#34;
+
+    Arguments:
+        _path {string} -- Configuration file path
+
+    Returns:
+        Union[
+            CfgReadResultEnumClass, -- Information about result of configuration reading,
+            str -- Function error message
+        ]
+    &#34;&#34;&#34;
+    global ShowInfo, SleepTime, CriticalCapacity
+    global UdpPort, UdpHost
+
+    cfg_schema = {
+        &#34;type&#34;: &#34;object&#34;,
+        &#34;properties&#34;: {
+            &#34;show info&#34;: {
+                &#34;type&#34;: &#34;boolean&#34;
+            },
+            &#34;sleep time&#34;: {
+                &#34;type&#34;: &#34;number&#34;,
+                &#34;minimum&#34;: 0,
+                &#34;maximum&#34;: 3600,
+            },
+            &#34;critical capacity&#34;: {
+                &#34;type&#34;: &#34;number&#34;,
+                &#34;minimum&#34;: 10,
+                &#34;maximum&#34;: 99,
+            },
+            &#34;udp port&#34;: {
+                &#34;type&#34;: &#34;number&#34;,
+                &#34;minimum&#34;: 4096,
+                &#34;maximum&#34;: 49151,
+            },
+            &#34;udp host&#34;: {
+                &#34;type&#34;: &#34;string&#34;,
+                &#34;format&#34;: &#34;ip-address&#34;
+            }
+        },
+        &#34;required&#34;: [&#34;show info&#34;, &#34;sleep time&#34;,
+                     &#34;critical capacity&#34;, &#34;udp port&#34;, &#34;udp host&#34;],
+        &#34;additionalProperties&#34;: False
+    }
+
+    result: CfgReadResultEnumClass
+    result = CfgReadResultEnumClass.is_not_exist
+    error_message: str = &#34;&#34;
+    file_name = &#34;{0}/{1}.cfg&#34;.format(_path, &#34;PowerCtrl&#34;)
+
+    ShowInfo = SHOW_INFO
+    SleepTime = SLEEP_TIME
+    CriticalCapacity = CRITICAL_CAPACITY
+    UdpPort = UDP_PORT
+    UdpHost = UDP_HOST
+
+    if os.path.isfile(file_name):
+        result = CfgReadResultEnumClass.is_exist
+        with open(file_name, &#34;r&#34;) as cfg_file_handler:
+            try:
+                config = json.load(cfg_file_handler)
+            except ValueError:
+                error_message = (&#39;Configuration file &#34;&#39; + file_name +
+                                 &#39;&#34; hasn\&#39;t JSON structure&#39;)
+                result = CfgReadResultEnumClass.is_broken
+                return result, error_message
+            except Exception:
+                error_message = &#39;Something unusual happened. Send this information with details to the author&#39;
+                result = CfgReadResultEnumClass.unknown
+                return result, error_message
+            else:
+                cfg_validator = jsonschema.Draft3Validator(
+                    cfg_schema,
+                    format_checker=jsonschema.draft3_format_checker)
+                if not cfg_validator.is_valid(config):
+                    _error_message = &#39;The following errors were found in the configuration file &#34;&#39; + file_name + &#39;&#34;:&#39;
+                    for error in sorted(cfg_validator.iter_errors(config), key=str):
+                        _error_message += error.message
+                        _error_message += &#39;&#34;, &#34;&#39;
+                    error_message = _error_message[:-3]
+                    result = CfgReadResultEnumClass.is_incorrect
+                    return result, error_message
+
+                ShowInfo = config.get(&#34;show info&#34;, SHOW_INFO)
+                SleepTime = config.get(&#34;sleep time&#34;, SLEEP_TIME)
+                CriticalCapacity = config.get(&#34;critical capacity&#34;, CRITICAL_CAPACITY)
+                UdpPort = config.get(&#34;udp port&#34;, UDP_PORT)
+                UdpHost = config.get(&#34;udp host&#34;, UDP_HOST)
+                return result, error_message
+    else:
+        error_message = &#39;Configuration file &#34;&#39; + file_name + &#39;&#34; is missing&#39;
+        result = CfgReadResultEnumClass.is_not_exist
+        return result, error_message
+
+
+def create_logger(_path: str):
+    &#34;&#34;&#34;create_logger -- Set up script logger. Log file has a name &#34;PowerCtrl.log&#34; and puts into directory, defined by argument &#34;path&#34;
+
+    Arguments:
+        _path {string} -- Log file path
+    &#34;&#34;&#34;
+    global TheLogger, ShowInfo
+    TheLogger = logging.getLogger(__name__)
+
+    &#34;&#34;&#34; Create handlers &#34;&#34;&#34;
+    c_handler = logging.StreamHandler()
+    f_handler = logging.FileHandler(&#34;{0}/{1}.log&#34;.format(_path, &#34;PowerCtrl&#34;))
+
+    &#34;&#34;&#34; Create formatters and add it to handlers&#34;&#34;&#34;
+    c_format = logging.Formatter(&#34;%(asctime)s [%(threadName)-12s] [%(levelname)-8s]  %(message)s&#34;)
+    f_format = logging.Formatter(&#34;%(asctime)s [%(threadName)-12s] [%(levelname)-8s]  %(message)s&#34;)
+    c_handler.setFormatter(c_format)
+    f_handler.setFormatter(f_format)
+
+    if ShowInfo:
+        c_handler.setLevel(logging.DEBUG)
+    else:
+        c_handler.setLevel(logging.CRITICAL + 1)
+    f_handler.setLevel(logging.INFO)
+
+    &#34;&#34;&#34; Add handlers to the logger &#34;&#34;&#34;
+    TheLogger.addHandler(c_handler)
+    TheLogger.addHandler(f_handler)
+
+    TheLogger.setLevel(logging.DEBUG)
+
+
+def pld_led_message(pld: PLDLedEnumClass) -&gt; str:
+    &#34;&#34;&#34;pld_led_message -- Form PLD status string.
+
+    Arguments:
+        pld {PLDLedEnumClass} -- PLD status
+
+    Returns:
+        str -- String with PLD status
+    &#34;&#34;&#34;
+    if pld == PLDLedEnumClass.off:
+        return &#39;PLD status: off&#39;
+    if pld == PLDLedEnumClass.blink:
+        return &#39;PLD status: blink&#39;
+    if pld == PLDLedEnumClass.red:
+        return &#39;PLD status: red&#39;
+    return &#39;PLD status: unknown&#39;
+
+
+def power_loss_test() -&gt; PLDLedEnumClass:
+    &#34;&#34;&#34;power_loss_test -- Test T208 UPS state.
+
+    Returns:
+        (class) PLDLedEnumClass -- PLD status
+    &#34;&#34;&#34;
+    TEST_REPEATS = 10
+    counter = 0
+    # To recognize blinking state, have to get information TEST_REPEATS times
+    for i in range(TEST_REPEATS):
+        if GPIO.input(GPIO_PORT) != 0:
+            counter += 1
+        time.sleep(0.01)
+    if counter == 0:
+        return PLDLedEnumClass.off
+    else:
+        if counter &lt; TEST_REPEATS:
+            return PLDLedEnumClass.blink
+        else:
+            return PLDLedEnumClass.red
+
+
+def read_voltage(bus: smbus.SMBus) -&gt; int:
+    &#34;&#34;&#34;read_voltage -- Read current battary voltage
+
+    Arguments:
+        bus {smbus.SMBus} -- Number of I2C bus
+
+    Returns:
+        int -- Current voltage
+    &#34;&#34;&#34;
+    read = bus.read_word_data(I2C_ADDRESS, 2)
+    swapped = struct.unpack(&#34;&lt;H&#34;, struct.pack(&#34;&gt;H&#34;, read))[0]
+    voltage = swapped * 1.25 / 1000 / 16
+    return voltage
+
+
+def read_capacity(bus: smbus.SMBus) -&gt; int:
+    &#34;&#34;&#34;read_voltage -- Read current battary capacity
+
+    Arguments:
+        bus {smbus.SMBus} -- Number of I2C bus
+
+    Returns:
+        int -- Current capacity
+    &#34;&#34;&#34;
+    read = bus.read_word_data(I2C_ADDRESS, 4)
+    swapped = struct.unpack(&#34;&lt;H&#34;, struct.pack(&#34;&gt;H&#34;, read))[0]
+    capacity = swapped / 256
+    return capacity
+
+
+def power_loss_control():
+    &#34;&#34;&#34;power_loss_control -- Run a loop of control of the UPS state.
+    The loop breaks after T208 lost a power outage and battaries capacity reaches setting low level.
+    &#34;&#34;&#34;
+    global is_time_to_stop
+    global stop_plc_thread
+    global pld_led_status
+
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(GPIO_PORT, GPIO.IN)
+
+    # 0 = /dev/i2c-0(port I2C0), 1 = /dev/i2c-1(port I2C1)
+    bus = smbus.SMBus(1)
+    try:
+
+        TheLogger.info(&#34;======== START ========&#34;)
+        TheLogger.info(&#34;Testing Started&#34;)
+        TheLogger.info(&#34;Voltage:%5.2fV&#34; % read_voltage(bus))
+        TheLogger.info(&#34;Battery:%5i%%&#34; % read_capacity(bus))
+
+        is_time_to_stop = False
+    # Main control loop
+        while not stop_plc_thread:
+            pld_led_status = power_loss_test()
+            TheLogger.debug(pld_led_message(pld_led_status))
+            if pld_led_status == PLDLedEnumClass.red:
+                BattaryCapacity = read_capacity(bus)
+
+                TheLogger.warning(&#34;AC Power Loss OR Power Adapter Failure. Battery:%5i%%&#34; % BattaryCapacity)
+
+                if BattaryCapacity &lt; CriticalCapacity:
+                    TheLogger.error(&#34;The battery is too low. Battery:%5i%%&#34; % BattaryCapacity)
+                    is_time_to_stop = True
+                    # exit()
+                    break
+            else:
+                if pld_led_status == PLDLedEnumClass.blink:
+                    BattaryCapacity = read_capacity(bus)
+                    TheLogger.debug(&#34;PLD led is blinking. It isn&#39;t normal state. Battery:%5i%%&#34; % BattaryCapacity)
+                else:
+                    if pld_led_status == PLDLedEnumClass.off:
+                        pass
+            time.sleep(SleepTime)
+    except Exception as exception:
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        TheLogger.critical(&#34;Stopped with an exception ---&#34; + str(exception) + &#34;--- in line&#34; + str(exc_tb.tb_lineno))
+    finally:
+        if is_time_to_stop:
+            TheLogger.warning(&#34;System will be shutdowned in 5 seconds.&#34;)
+        # stop_logging()
+        TheLogger.info(&#34;~~~~~~~~~ STOP ~~~~~~~~~&#34;)
+        GPIO.cleanup()
+        TheLogger.debug(&#34;Control stopped&#34;)
+
+
+def udp_server():
+    &#34;&#34;&#34;udp_server -- Run udp-server loop
+    Udp-server waits command from client and sends an answer:
+    - for command &#39;state&#39; sends information, created with function &#39;pld_led_message&#39;
+    - for command &#39;charge&#39; sends information about capacity and voltage of battaries
+    - for other sends &#39;Ready&#39; answer
+    &#34;&#34;&#34;
+    global stop_udp_server_thread
+    global pld_led_status
+    global UdpPort, UdpHost
+
+    timeout = 5
+    # host = &#39;192.168.201.201&#39;
+    # host = &#39;&#39;
+    # port = 7777
+    host = UdpHost
+    port = UdpPort
+    addr = (host, port)
+    server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        server.bind(addr)
+    except OSError as error:
+        ErrorMsg = error.strerror + &#34;. UDP-server isn&#39;t exist.&#34;
+        TheLogger.warn (ErrorMsg)
+        return
+
+    stop_udp_server_thread = False
+
+    while not stop_udp_server_thread:
+        server.settimeout(timeout)
+        msg = &#34;Ready&#34;
+        try:
+            d = server.recvfrom(1024)
+        except socket.timeout:
+            continue
+
+        received_str = d[0].decode(&#39;utf-8&#39;)
+        addr = d[1]
+        TheLogger.debug(received_str)
+        if received_str == &#34;state&#34;:
+            msg = pld_led_message(pld_led_status)
+        else:
+            if received_str == &#34;charge&#34;:
+                bus = smbus.SMBus(1)
+                msg = &#34;Voltage:%5.2fV &#34; % read_voltage(bus) + &#34;Battery:%5i%%&#34; % read_capacity(bus)
+            else:
+                msg = &#34;Ready&#34;
+        TheLogger.debug(msg)
+        server.sendto(msg.encode(&#39;utf-8&#39;), addr)
+    server.close()
+    TheLogger.debug(&#34;Udp stopped&#34;)
+
+
+def main():
+    &#34;&#34;&#34;main -- Organize the general logic of the script.
+    This function create logger, runs the control loop and udp server threads,
+    and shuts down the computer when shutdown conditions are reached.
+    &#34;&#34;&#34;
+    global stop_plc_thread, stop_udp_server_thread
+    global pld_led_status
+    global ShowInfo, SleepTime, CriticalCapacity
+
+    # Eliminate the chance to run another exemplar of the script.
+    try:
+        me = singleton.SingleInstance()
+    except:
+        sys.exit()
+
+    pld_led_status = PLDLedEnumClass.off
+    stop_plc_thread = False
+
+    # Get path for log file and config file
+    if len(sys.argv) &gt; 1:
+        # name = sys.argv[0]
+        logpath = sys.argv[1]
+        if not os.path.isdir (logpath):
+            logpath = path.abspath(path.dirname(__file__))
+    else:
+        # name = sys.argv[0]
+        logpath = path.abspath(path.dirname(__file__))
+
+    ShowInfo = SHOW_INFO
+    SleepTime = SLEEP_TIME
+    CriticalCapacity = CRITICAL_CAPACITY
+
+    # Read config file and get error message to use it by logger if nessery
+    read_cfg_res: CfgReadResultEnumClass
+    read_cfg_res, cfg_error_message = read_config(logpath)
+
+    create_logger(logpath)
+
+    if read_cfg_res == CfgReadResultEnumClass.is_exist:
+        TheLogger.debug(&#39;Config file was opened&#39;)
+    elif read_cfg_res == CfgReadResultEnumClass.is_broken:
+        TheLogger.warn(cfg_error_message + &#39;. Default values will be set&#39;)
+    elif read_cfg_res == CfgReadResultEnumClass.is_incorrect:
+        TheLogger.warn(cfg_error_message + &#39;. Default values will be set&#39;)
+    elif read_cfg_res == CfgReadResultEnumClass.is_not_exist:
+        TheLogger.warn(cfg_error_message + &#39;. Default values will be set&#39;)
+
+    if getattr(sys, &#39;frozen&#39;, False) and hasattr(sys, &#39;_MEIPASS&#39;):
+        TheLogger.debug(&#39;Running in a PyInstaller bundle&#39;)
+    else:
+        TheLogger.debug(&#39;Running in a normal Python process&#39;)
+
+    try:
+        # Create threads and wait keyboard interrupt
+        th_control = Thread(target=power_loss_control, daemon=False)
+        th_udp = Thread(target=udp_server, daemon=False)
+        th_control.start()
+        th_udp.start()
+        while True:
+            time.sleep(100)
+    except (KeyboardInterrupt, SystemExit):
+        # Set flags to stop thread loops and block threads until finish
+        stop_plc_thread = True
+        stop_udp_server_thread = True
+        th_control.join()
+        th_udp.join()
+    finally:
+        # If need to shut down, stop udp-server thread and send system command &#34;poweroof&#34;
+        if is_time_to_stop:
+            stop_udp_server_thread = True
+            th_udp.join()
+            time.sleep(5)
+            os.system(&#34;poweroff&#34;)
+        else:
+            TheLogger.debug(&#34;Ordinary exit&#34;)
+
+if __name__ == &#34;__main__&#34;:
+    main()</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="src.PowerControl.create_logger"><code class="name flex">
+<span>def <span class="ident">create_logger</span></span>(<span>_path: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>create_logger &ndash; Set up script logger. Log file has a name "PowerCtrl.log" and puts into directory, defined by argument "path"</p>
+<h2 id="arguments">Arguments</h2>
+<p>_path {string} &ndash; Log file path</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_logger(_path: str):
+    &#34;&#34;&#34;create_logger -- Set up script logger. Log file has a name &#34;PowerCtrl.log&#34; and puts into directory, defined by argument &#34;path&#34;
+
+    Arguments:
+        _path {string} -- Log file path
+    &#34;&#34;&#34;
+    global TheLogger, ShowInfo
+    TheLogger = logging.getLogger(__name__)
+
+    &#34;&#34;&#34; Create handlers &#34;&#34;&#34;
+    c_handler = logging.StreamHandler()
+    f_handler = logging.FileHandler(&#34;{0}/{1}.log&#34;.format(_path, &#34;PowerCtrl&#34;))
+
+    &#34;&#34;&#34; Create formatters and add it to handlers&#34;&#34;&#34;
+    c_format = logging.Formatter(&#34;%(asctime)s [%(threadName)-12s] [%(levelname)-8s]  %(message)s&#34;)
+    f_format = logging.Formatter(&#34;%(asctime)s [%(threadName)-12s] [%(levelname)-8s]  %(message)s&#34;)
+    c_handler.setFormatter(c_format)
+    f_handler.setFormatter(f_format)
+
+    if ShowInfo:
+        c_handler.setLevel(logging.DEBUG)
+    else:
+        c_handler.setLevel(logging.CRITICAL + 1)
+    f_handler.setLevel(logging.INFO)
+
+    &#34;&#34;&#34; Add handlers to the logger &#34;&#34;&#34;
+    TheLogger.addHandler(c_handler)
+    TheLogger.addHandler(f_handler)
+
+    TheLogger.setLevel(logging.DEBUG)</code></pre>
+</details>
+</dd>
+<dt id="src.PowerControl.main"><code class="name flex">
+<span>def <span class="ident">main</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>main &ndash; Organize the general logic of the script.
+This function create logger, runs the control loop and udp server threads,
+and shuts down the computer when shutdown conditions are reached.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def main():
+    &#34;&#34;&#34;main -- Organize the general logic of the script.
+    This function create logger, runs the control loop and udp server threads,
+    and shuts down the computer when shutdown conditions are reached.
+    &#34;&#34;&#34;
+    global stop_plc_thread, stop_udp_server_thread
+    global pld_led_status
+    global ShowInfo, SleepTime, CriticalCapacity
+
+    # Eliminate the chance to run another exemplar of the script.
+    try:
+        me = singleton.SingleInstance()
+    except:
+        sys.exit()
+
+    pld_led_status = PLDLedEnumClass.off
+    stop_plc_thread = False
+
+    # Get path for log file and config file
+    if len(sys.argv) &gt; 1:
+        # name = sys.argv[0]
+        logpath = sys.argv[1]
+        if not os.path.isdir (logpath):
+            logpath = path.abspath(path.dirname(__file__))
+    else:
+        # name = sys.argv[0]
+        logpath = path.abspath(path.dirname(__file__))
+
+    ShowInfo = SHOW_INFO
+    SleepTime = SLEEP_TIME
+    CriticalCapacity = CRITICAL_CAPACITY
+
+    # Read config file and get error message to use it by logger if nessery
+    read_cfg_res: CfgReadResultEnumClass
+    read_cfg_res, cfg_error_message = read_config(logpath)
+
+    create_logger(logpath)
+
+    if read_cfg_res == CfgReadResultEnumClass.is_exist:
+        TheLogger.debug(&#39;Config file was opened&#39;)
+    elif read_cfg_res == CfgReadResultEnumClass.is_broken:
+        TheLogger.warn(cfg_error_message + &#39;. Default values will be set&#39;)
+    elif read_cfg_res == CfgReadResultEnumClass.is_incorrect:
+        TheLogger.warn(cfg_error_message + &#39;. Default values will be set&#39;)
+    elif read_cfg_res == CfgReadResultEnumClass.is_not_exist:
+        TheLogger.warn(cfg_error_message + &#39;. Default values will be set&#39;)
+
+    if getattr(sys, &#39;frozen&#39;, False) and hasattr(sys, &#39;_MEIPASS&#39;):
+        TheLogger.debug(&#39;Running in a PyInstaller bundle&#39;)
+    else:
+        TheLogger.debug(&#39;Running in a normal Python process&#39;)
+
+    try:
+        # Create threads and wait keyboard interrupt
+        th_control = Thread(target=power_loss_control, daemon=False)
+        th_udp = Thread(target=udp_server, daemon=False)
+        th_control.start()
+        th_udp.start()
+        while True:
+            time.sleep(100)
+    except (KeyboardInterrupt, SystemExit):
+        # Set flags to stop thread loops and block threads until finish
+        stop_plc_thread = True
+        stop_udp_server_thread = True
+        th_control.join()
+        th_udp.join()
+    finally:
+        # If need to shut down, stop udp-server thread and send system command &#34;poweroof&#34;
+        if is_time_to_stop:
+            stop_udp_server_thread = True
+            th_udp.join()
+            time.sleep(5)
+            os.system(&#34;poweroff&#34;)
+        else:
+            TheLogger.debug(&#34;Ordinary exit&#34;)</code></pre>
+</details>
+</dd>
+<dt id="src.PowerControl.pld_led_message"><code class="name flex">
+<span>def <span class="ident">pld_led_message</span></span>(<span>pld: <a title="src.PowerControl.PLDLedEnumClass" href="#src.PowerControl.PLDLedEnumClass">PLDLedEnumClass</a>) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>pld_led_message &ndash; Form PLD status string.</p>
+<h2 id="arguments">Arguments</h2>
+<p>pld {PLDLedEnumClass} &ndash; PLD status</p>
+<h2 id="returns">Returns</h2>
+<p>str &ndash; String with PLD status</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pld_led_message(pld: PLDLedEnumClass) -&gt; str:
+    &#34;&#34;&#34;pld_led_message -- Form PLD status string.
+
+    Arguments:
+        pld {PLDLedEnumClass} -- PLD status
+
+    Returns:
+        str -- String with PLD status
+    &#34;&#34;&#34;
+    if pld == PLDLedEnumClass.off:
+        return &#39;PLD status: off&#39;
+    if pld == PLDLedEnumClass.blink:
+        return &#39;PLD status: blink&#39;
+    if pld == PLDLedEnumClass.red:
+        return &#39;PLD status: red&#39;
+    return &#39;PLD status: unknown&#39;</code></pre>
+</details>
+</dd>
+<dt id="src.PowerControl.power_loss_control"><code class="name flex">
+<span>def <span class="ident">power_loss_control</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>power_loss_control &ndash; Run a loop of control of the UPS state.
+The loop breaks after T208 lost a power outage and battaries capacity reaches setting low level.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def power_loss_control():
+    &#34;&#34;&#34;power_loss_control -- Run a loop of control of the UPS state.
+    The loop breaks after T208 lost a power outage and battaries capacity reaches setting low level.
+    &#34;&#34;&#34;
+    global is_time_to_stop
+    global stop_plc_thread
+    global pld_led_status
+
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(GPIO_PORT, GPIO.IN)
+
+    # 0 = /dev/i2c-0(port I2C0), 1 = /dev/i2c-1(port I2C1)
+    bus = smbus.SMBus(1)
+    try:
+
+        TheLogger.info(&#34;======== START ========&#34;)
+        TheLogger.info(&#34;Testing Started&#34;)
+        TheLogger.info(&#34;Voltage:%5.2fV&#34; % read_voltage(bus))
+        TheLogger.info(&#34;Battery:%5i%%&#34; % read_capacity(bus))
+
+        is_time_to_stop = False
+    # Main control loop
+        while not stop_plc_thread:
+            pld_led_status = power_loss_test()
+            TheLogger.debug(pld_led_message(pld_led_status))
+            if pld_led_status == PLDLedEnumClass.red:
+                BattaryCapacity = read_capacity(bus)
+
+                TheLogger.warning(&#34;AC Power Loss OR Power Adapter Failure. Battery:%5i%%&#34; % BattaryCapacity)
+
+                if BattaryCapacity &lt; CriticalCapacity:
+                    TheLogger.error(&#34;The battery is too low. Battery:%5i%%&#34; % BattaryCapacity)
+                    is_time_to_stop = True
+                    # exit()
+                    break
+            else:
+                if pld_led_status == PLDLedEnumClass.blink:
+                    BattaryCapacity = read_capacity(bus)
+                    TheLogger.debug(&#34;PLD led is blinking. It isn&#39;t normal state. Battery:%5i%%&#34; % BattaryCapacity)
+                else:
+                    if pld_led_status == PLDLedEnumClass.off:
+                        pass
+            time.sleep(SleepTime)
+    except Exception as exception:
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        TheLogger.critical(&#34;Stopped with an exception ---&#34; + str(exception) + &#34;--- in line&#34; + str(exc_tb.tb_lineno))
+    finally:
+        if is_time_to_stop:
+            TheLogger.warning(&#34;System will be shutdowned in 5 seconds.&#34;)
+        # stop_logging()
+        TheLogger.info(&#34;~~~~~~~~~ STOP ~~~~~~~~~&#34;)
+        GPIO.cleanup()
+        TheLogger.debug(&#34;Control stopped&#34;)</code></pre>
+</details>
+</dd>
+<dt id="src.PowerControl.power_loss_test"><code class="name flex">
+<span>def <span class="ident">power_loss_test</span></span>(<span>) ‑> <a title="src.PowerControl.PLDLedEnumClass" href="#src.PowerControl.PLDLedEnumClass">PLDLedEnumClass</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>power_loss_test &ndash; Test T208 UPS state.</p>
+<h2 id="returns">Returns</h2>
+<p>(class) PLDLedEnumClass &ndash; PLD status</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def power_loss_test() -&gt; PLDLedEnumClass:
+    &#34;&#34;&#34;power_loss_test -- Test T208 UPS state.
+
+    Returns:
+        (class) PLDLedEnumClass -- PLD status
+    &#34;&#34;&#34;
+    TEST_REPEATS = 10
+    counter = 0
+    # To recognize blinking state, have to get information TEST_REPEATS times
+    for i in range(TEST_REPEATS):
+        if GPIO.input(GPIO_PORT) != 0:
+            counter += 1
+        time.sleep(0.01)
+    if counter == 0:
+        return PLDLedEnumClass.off
+    else:
+        if counter &lt; TEST_REPEATS:
+            return PLDLedEnumClass.blink
+        else:
+            return PLDLedEnumClass.red</code></pre>
+</details>
+</dd>
+<dt id="src.PowerControl.read_capacity"><code class="name flex">
+<span>def <span class="ident">read_capacity</span></span>(<span>bus: SMBus) ‑> int</span>
+</code></dt>
+<dd>
+<div class="desc"><p>read_voltage &ndash; Read current battary capacity</p>
+<h2 id="arguments">Arguments</h2>
+<p>bus {smbus.SMBus} &ndash; Number of I2C bus</p>
+<h2 id="returns">Returns</h2>
+<p>int &ndash; Current capacity</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def read_capacity(bus: smbus.SMBus) -&gt; int:
+    &#34;&#34;&#34;read_voltage -- Read current battary capacity
+
+    Arguments:
+        bus {smbus.SMBus} -- Number of I2C bus
+
+    Returns:
+        int -- Current capacity
+    &#34;&#34;&#34;
+    read = bus.read_word_data(I2C_ADDRESS, 4)
+    swapped = struct.unpack(&#34;&lt;H&#34;, struct.pack(&#34;&gt;H&#34;, read))[0]
+    capacity = swapped / 256
+    return capacity</code></pre>
+</details>
+</dd>
+<dt id="src.PowerControl.read_config"><code class="name flex">
+<span>def <span class="ident">read_config</span></span>(<span>_path: str) ‑> Union[<a title="src.PowerControl.CfgReadResultEnumClass" href="#src.PowerControl.CfgReadResultEnumClass">CfgReadResultEnumClass</a>, str]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>read_config
+&ndash; Read initial settings. Configuration file has a name "PowerCtrl.cfg" and puts into directory, defined by argument "path"</p>
+<h2 id="arguments">Arguments</h2>
+<p>_path {string} &ndash; Configuration file path</p>
+<h2 id="returns">Returns</h2>
+<p>Union[
+CfgReadResultEnumClass, &ndash; Information about result of configuration reading,
+str &ndash; Function error message
+]</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def read_config(_path: str) -&gt; Union[CfgReadResultEnumClass, str]:
+    &#34;&#34;&#34;read_config  -- Read initial settings. Configuration file has a name &#34;PowerCtrl.cfg&#34; and puts into directory, defined by argument &#34;path&#34;
+
+    Arguments:
+        _path {string} -- Configuration file path
+
+    Returns:
+        Union[
+            CfgReadResultEnumClass, -- Information about result of configuration reading,
+            str -- Function error message
+        ]
+    &#34;&#34;&#34;
+    global ShowInfo, SleepTime, CriticalCapacity
+    global UdpPort, UdpHost
+
+    cfg_schema = {
+        &#34;type&#34;: &#34;object&#34;,
+        &#34;properties&#34;: {
+            &#34;show info&#34;: {
+                &#34;type&#34;: &#34;boolean&#34;
+            },
+            &#34;sleep time&#34;: {
+                &#34;type&#34;: &#34;number&#34;,
+                &#34;minimum&#34;: 0,
+                &#34;maximum&#34;: 3600,
+            },
+            &#34;critical capacity&#34;: {
+                &#34;type&#34;: &#34;number&#34;,
+                &#34;minimum&#34;: 10,
+                &#34;maximum&#34;: 99,
+            },
+            &#34;udp port&#34;: {
+                &#34;type&#34;: &#34;number&#34;,
+                &#34;minimum&#34;: 4096,
+                &#34;maximum&#34;: 49151,
+            },
+            &#34;udp host&#34;: {
+                &#34;type&#34;: &#34;string&#34;,
+                &#34;format&#34;: &#34;ip-address&#34;
+            }
+        },
+        &#34;required&#34;: [&#34;show info&#34;, &#34;sleep time&#34;,
+                     &#34;critical capacity&#34;, &#34;udp port&#34;, &#34;udp host&#34;],
+        &#34;additionalProperties&#34;: False
+    }
+
+    result: CfgReadResultEnumClass
+    result = CfgReadResultEnumClass.is_not_exist
+    error_message: str = &#34;&#34;
+    file_name = &#34;{0}/{1}.cfg&#34;.format(_path, &#34;PowerCtrl&#34;)
+
+    ShowInfo = SHOW_INFO
+    SleepTime = SLEEP_TIME
+    CriticalCapacity = CRITICAL_CAPACITY
+    UdpPort = UDP_PORT
+    UdpHost = UDP_HOST
+
+    if os.path.isfile(file_name):
+        result = CfgReadResultEnumClass.is_exist
+        with open(file_name, &#34;r&#34;) as cfg_file_handler:
+            try:
+                config = json.load(cfg_file_handler)
+            except ValueError:
+                error_message = (&#39;Configuration file &#34;&#39; + file_name +
+                                 &#39;&#34; hasn\&#39;t JSON structure&#39;)
+                result = CfgReadResultEnumClass.is_broken
+                return result, error_message
+            except Exception:
+                error_message = &#39;Something unusual happened. Send this information with details to the author&#39;
+                result = CfgReadResultEnumClass.unknown
+                return result, error_message
+            else:
+                cfg_validator = jsonschema.Draft3Validator(
+                    cfg_schema,
+                    format_checker=jsonschema.draft3_format_checker)
+                if not cfg_validator.is_valid(config):
+                    _error_message = &#39;The following errors were found in the configuration file &#34;&#39; + file_name + &#39;&#34;:&#39;
+                    for error in sorted(cfg_validator.iter_errors(config), key=str):
+                        _error_message += error.message
+                        _error_message += &#39;&#34;, &#34;&#39;
+                    error_message = _error_message[:-3]
+                    result = CfgReadResultEnumClass.is_incorrect
+                    return result, error_message
+
+                ShowInfo = config.get(&#34;show info&#34;, SHOW_INFO)
+                SleepTime = config.get(&#34;sleep time&#34;, SLEEP_TIME)
+                CriticalCapacity = config.get(&#34;critical capacity&#34;, CRITICAL_CAPACITY)
+                UdpPort = config.get(&#34;udp port&#34;, UDP_PORT)
+                UdpHost = config.get(&#34;udp host&#34;, UDP_HOST)
+                return result, error_message
+    else:
+        error_message = &#39;Configuration file &#34;&#39; + file_name + &#39;&#34; is missing&#39;
+        result = CfgReadResultEnumClass.is_not_exist
+        return result, error_message</code></pre>
+</details>
+</dd>
+<dt id="src.PowerControl.read_voltage"><code class="name flex">
+<span>def <span class="ident">read_voltage</span></span>(<span>bus: SMBus) ‑> int</span>
+</code></dt>
+<dd>
+<div class="desc"><p>read_voltage &ndash; Read current battary voltage</p>
+<h2 id="arguments">Arguments</h2>
+<p>bus {smbus.SMBus} &ndash; Number of I2C bus</p>
+<h2 id="returns">Returns</h2>
+<p>int &ndash; Current voltage</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def read_voltage(bus: smbus.SMBus) -&gt; int:
+    &#34;&#34;&#34;read_voltage -- Read current battary voltage
+
+    Arguments:
+        bus {smbus.SMBus} -- Number of I2C bus
+
+    Returns:
+        int -- Current voltage
+    &#34;&#34;&#34;
+    read = bus.read_word_data(I2C_ADDRESS, 2)
+    swapped = struct.unpack(&#34;&lt;H&#34;, struct.pack(&#34;&gt;H&#34;, read))[0]
+    voltage = swapped * 1.25 / 1000 / 16
+    return voltage</code></pre>
+</details>
+</dd>
+<dt id="src.PowerControl.udp_server"><code class="name flex">
+<span>def <span class="ident">udp_server</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>udp_server &ndash; Run udp-server loop
+Udp-server waits command from client and sends an answer:
+- for command 'state' sends information, created with function 'pld_led_message'
+- for command 'charge' sends information about capacity and voltage of battaries
+- for other sends 'Ready' answer</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def udp_server():
+    &#34;&#34;&#34;udp_server -- Run udp-server loop
+    Udp-server waits command from client and sends an answer:
+    - for command &#39;state&#39; sends information, created with function &#39;pld_led_message&#39;
+    - for command &#39;charge&#39; sends information about capacity and voltage of battaries
+    - for other sends &#39;Ready&#39; answer
+    &#34;&#34;&#34;
+    global stop_udp_server_thread
+    global pld_led_status
+    global UdpPort, UdpHost
+
+    timeout = 5
+    # host = &#39;192.168.201.201&#39;
+    # host = &#39;&#39;
+    # port = 7777
+    host = UdpHost
+    port = UdpPort
+    addr = (host, port)
+    server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        server.bind(addr)
+    except OSError as error:
+        ErrorMsg = error.strerror + &#34;. UDP-server isn&#39;t exist.&#34;
+        TheLogger.warn (ErrorMsg)
+        return
+
+    stop_udp_server_thread = False
+
+    while not stop_udp_server_thread:
+        server.settimeout(timeout)
+        msg = &#34;Ready&#34;
+        try:
+            d = server.recvfrom(1024)
+        except socket.timeout:
+            continue
+
+        received_str = d[0].decode(&#39;utf-8&#39;)
+        addr = d[1]
+        TheLogger.debug(received_str)
+        if received_str == &#34;state&#34;:
+            msg = pld_led_message(pld_led_status)
+        else:
+            if received_str == &#34;charge&#34;:
+                bus = smbus.SMBus(1)
+                msg = &#34;Voltage:%5.2fV &#34; % read_voltage(bus) + &#34;Battery:%5i%%&#34; % read_capacity(bus)
+            else:
+                msg = &#34;Ready&#34;
+        TheLogger.debug(msg)
+        server.sendto(msg.encode(&#39;utf-8&#39;), addr)
+    server.close()
+    TheLogger.debug(&#34;Udp stopped&#34;)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="src.PowerControl.CfgReadResultEnumClass"><code class="flex name class">
+<span>class <span class="ident">CfgReadResultEnumClass</span></span>
+<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>CfgReadResultEnumClass &ndash; Class defines the state of reading the file of configuration</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class CfgReadResultEnumClass (Enum):
+    &#34;&#34;&#34;CfgReadResultEnumClass -- Class defines the state of reading the file of configuration
+    &#34;&#34;&#34;
+    is_exist = auto()
+    is_not_exist = auto()
+    is_broken = auto()
+    is_incorrect = auto()
+    unknown = auto()</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="src.PowerControl.CfgReadResultEnumClass.is_broken"><code class="name">var <span class="ident">is_broken</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="src.PowerControl.CfgReadResultEnumClass.is_exist"><code class="name">var <span class="ident">is_exist</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="src.PowerControl.CfgReadResultEnumClass.is_incorrect"><code class="name">var <span class="ident">is_incorrect</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="src.PowerControl.CfgReadResultEnumClass.is_not_exist"><code class="name">var <span class="ident">is_not_exist</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="src.PowerControl.CfgReadResultEnumClass.unknown"><code class="name">var <span class="ident">unknown</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="src.PowerControl.PLDLedEnumClass"><code class="flex name class">
+<span>class <span class="ident">PLDLedEnumClass</span></span>
+<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>PLDLedEnumClass &ndash; Class defines state of Power Loss Detection (PLD) LED
+off &ndash; T208 is plugged to the mains
+red &ndash; T208 is not plugged to the mains
+blink &ndash; It is undocumented state of plugged T208. Happens occasionally, frequient after a power outage</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class PLDLedEnumClass (Enum):
+    &#34;&#34;&#34;PLDLedEnumClass -- Class defines state of Power Loss Detection (PLD) LED
+    off -- T208 is plugged to the mains
+    red -- T208 is not plugged to the mains
+    blink -- It is undocumented state of plugged T208. Happens occasionally, frequient after a power outage
+    &#34;&#34;&#34;
+    off = 1
+    red = 2
+    blink = 3</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="src.PowerControl.PLDLedEnumClass.blink"><code class="name">var <span class="ident">blink</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="src.PowerControl.PLDLedEnumClass.off"><code class="name">var <span class="ident">off</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="src.PowerControl.PLDLedEnumClass.red"><code class="name">var <span class="ident">red</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="src" href="index.html">src</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="two-column">
+<li><code><a title="src.PowerControl.create_logger" href="#src.PowerControl.create_logger">create_logger</a></code></li>
+<li><code><a title="src.PowerControl.main" href="#src.PowerControl.main">main</a></code></li>
+<li><code><a title="src.PowerControl.pld_led_message" href="#src.PowerControl.pld_led_message">pld_led_message</a></code></li>
+<li><code><a title="src.PowerControl.power_loss_control" href="#src.PowerControl.power_loss_control">power_loss_control</a></code></li>
+<li><code><a title="src.PowerControl.power_loss_test" href="#src.PowerControl.power_loss_test">power_loss_test</a></code></li>
+<li><code><a title="src.PowerControl.read_capacity" href="#src.PowerControl.read_capacity">read_capacity</a></code></li>
+<li><code><a title="src.PowerControl.read_config" href="#src.PowerControl.read_config">read_config</a></code></li>
+<li><code><a title="src.PowerControl.read_voltage" href="#src.PowerControl.read_voltage">read_voltage</a></code></li>
+<li><code><a title="src.PowerControl.udp_server" href="#src.PowerControl.udp_server">udp_server</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="src.PowerControl.CfgReadResultEnumClass" href="#src.PowerControl.CfgReadResultEnumClass">CfgReadResultEnumClass</a></code></h4>
+<ul class="">
+<li><code><a title="src.PowerControl.CfgReadResultEnumClass.is_broken" href="#src.PowerControl.CfgReadResultEnumClass.is_broken">is_broken</a></code></li>
+<li><code><a title="src.PowerControl.CfgReadResultEnumClass.is_exist" href="#src.PowerControl.CfgReadResultEnumClass.is_exist">is_exist</a></code></li>
+<li><code><a title="src.PowerControl.CfgReadResultEnumClass.is_incorrect" href="#src.PowerControl.CfgReadResultEnumClass.is_incorrect">is_incorrect</a></code></li>
+<li><code><a title="src.PowerControl.CfgReadResultEnumClass.is_not_exist" href="#src.PowerControl.CfgReadResultEnumClass.is_not_exist">is_not_exist</a></code></li>
+<li><code><a title="src.PowerControl.CfgReadResultEnumClass.unknown" href="#src.PowerControl.CfgReadResultEnumClass.unknown">unknown</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.PowerControl.PLDLedEnumClass" href="#src.PowerControl.PLDLedEnumClass">PLDLedEnumClass</a></code></h4>
+<ul class="">
+<li><code><a title="src.PowerControl.PLDLedEnumClass.blink" href="#src.PowerControl.PLDLedEnumClass.blink">blink</a></code></li>
+<li><code><a title="src.PowerControl.PLDLedEnumClass.off" href="#src.PowerControl.PLDLedEnumClass.off">off</a></code></li>
+<li><code><a title="src.PowerControl.PLDLedEnumClass.red" href="#src.PowerControl.PLDLedEnumClass.red">red</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>
