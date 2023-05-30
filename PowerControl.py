@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
 """
-Control script for Geekworm T208 UPS for Jatson Nano (https://wiki.geekworm.com/T208).
+Control script for Geekworm T208 UPS (https://wiki.geekworm.com/T208) for Jatson Nano.
 Some functions were get from https://wiki.geekworm.com/T208-Software. Strongly recommended to read the webpage before using this script.
 The script periodecly checks if the device is plugged to the mains, and it's battary capacity and voltage.
 The script turns off power of Jetson when T208 battary capacity reaches setting low level and it lost a power outage.
 Information about the state of device, if necessary, available by UDP.
+
+Script needs the next modules, who install with pip3 (of course you have to install pip3 before):
+pip3 install RPi.GPIO -- I hadn't to install this module, it had been installed on my Jetson Nano by default
+sudo pip3 install smbus
+pip3 install jsonschema
+pip3 install tendo
 """
 
 # Set Python3 as a default version: https://raspberry-valley.azurewebsites.net/Python-Default-Version/
@@ -51,6 +57,19 @@ class PLDLedEnumClass (Enum):
     """
     blink = 3
     """blink -- It is undocumented state of plugged T208. Happens occasionally, frequient after a power outage
+    """
+
+class ReadT208ResultEnumClass (Enum):
+    """CfgReadResultEnumClass -- Class defines the state of reading SMBus
+    """
+    is_correct = auto()
+    """T208 returned a value
+    """
+    is_not_connected = auto()
+    """Could not read from SMBus and was returned errno 121. It possible T208 doesn't connected
+    """
+    unknown = auto()
+    """Something unusual happened.
     """
 
 
@@ -281,34 +300,94 @@ def power_loss_test() -> PLDLedEnumClass:
             return PLDLedEnumClass.red
 
 
-def read_voltage(bus: smbus.SMBus) -> int:
+
+def read_voltage(bus: smbus.SMBus) -> Union[ReadT208ResultEnumClass, float]:
     """read_voltage -- Read current battary voltage
 
     Arguments:
         bus {smbus.SMBus} -- Number of I2C bus
 
     Returns:
-        int -- Current voltage
+        Union[ReadT208ResultEnumClass, float] -- State of battary voltage reading and its value
     """
-    read = bus.read_word_data(I2C_ADDRESS, 2)
-    swapped = struct.unpack("<H", struct.pack(">H", read))[0]
-    voltage = swapped * 1.25 / 1000 / 16
-    return voltage
+    error_code: ReadT208ResultEnumClass
+    error_code = ReadT208ResultEnumClass.is_correct
+    try:
+        read = bus.read_word_data(I2C_ADDRESS, 2)
+        swapped = struct.unpack("<H", struct.pack(">H", read))[0]
+        voltage = swapped * 1.25 / 1000 / 16
+    except IOError as exception:
+        if exception.errno == 121:
+            TheLogger.critical("Cannot read value of voltage. It possible T208 dosn't connect. Exception:" + str(exception))
+            error_code = ReadT208ResultEnumClass.is_not_connected
+    except Exception as exception:
+        TheLogger.critical("Function read_voltage stopped with an exception ---" + str(exception))
+        error_code = ReadT208ResultEnumClass.unknown
+    finally:
+        if error_code != ReadT208ResultEnumClass.is_correct:
+            voltage = 5
+        # TheLogger.debug('error_code: {}'.format(error_code.name))
+        return error_code, voltage
 
-
-def read_capacity(bus: smbus.SMBus) -> int:
-    """read_voltage -- Read current battary capacity
+def read_capacity(bus: smbus.SMBus) -> Union[ReadT208ResultEnumClass, int]:
+    """read_capacity -- Read current battary capacity
 
     Arguments:
         bus {smbus.SMBus} -- Number of I2C bus
 
     Returns:
-        int -- Current capacity
+        Union[ReadT208ResultEnumClass, int] -- State of battary capacity reading and its value
     """
-    read = bus.read_word_data(I2C_ADDRESS, 4)
-    swapped = struct.unpack("<H", struct.pack(">H", read))[0]
-    capacity = swapped / 256
-    return capacity
+    error_code: ReadT208ResultEnumClass
+    error_code = ReadT208ResultEnumClass.is_correct
+    try:
+        read = bus.read_word_data(I2C_ADDRESS, 4)
+        swapped = struct.unpack("<H", struct.pack(">H", read))[0]
+        capacity = swapped / 256
+    except IOError as exception:
+        if exception.errno == 121:
+            TheLogger.critical("Cannot read value of capacity. It possible T208 dosn't connect. Exception:" + str(exception))
+            error_code = ReadT208ResultEnumClass.is_not_connected
+    except Exception as exception:
+        TheLogger.critical("Function read_capacity stopped with an exception ---" + str(exception))
+        error_code = ReadT208ResultEnumClass.unknown
+    finally:
+        if error_code != ReadT208ResultEnumClass.is_correct:
+            capacity = 100
+        return error_code, capacity
+
+
+def GetVoltage(bus: smbus.SMBus) -> str:
+    """GetVoltage -- Return voltage in string format with error checking
+
+    Arguments:
+        bus {smbus.SMBus} -- Number of I2C bus
+
+    Returns:
+        str -- String like "Voltage:{value}V" or error information
+    """
+    reading_code: ReadT208ResultEnumClass
+    reading_code, voltage = read_voltage(bus)
+    # TheLogger.debug('reading_code: {}'.format(reading_code.name))
+    if reading_code == ReadT208ResultEnumClass.is_correct:
+        return "Voltage:%5.2fV" % voltage
+    return "Incorrect information about voltage"
+
+
+def GetCapacity(bus: smbus.SMBus) -> str:
+    """GetCapacity -- Return capacity in string format with error checking
+
+    Arguments:
+        bus {smbus.SMBus} -- Number of I2C bus
+
+    Returns:
+        str -- String like "Capacity:{value}V" or error information
+    """
+    reading_code: ReadT208ResultEnumClass
+    reading_code, capacity = read_capacity(bus)
+    if reading_code == ReadT208ResultEnumClass.is_correct:
+        return "Battery:%5i%%" % capacity
+    return "Incorrect information about capacity"
 
 
 def power_loss_control():
@@ -328,31 +407,44 @@ def power_loss_control():
 
         TheLogger.info("======== START ========")
         TheLogger.info("Testing Started")
-        TheLogger.info("Voltage:%5.2fV" % read_voltage(bus))
-        TheLogger.info("Battery:%5i%%" % read_capacity(bus))
+        TheLogger.info(GetVoltage(bus))
+        TheLogger.info(GetCapacity(bus))
 
         is_time_to_stop = False
     # Main control loop
         while not stop_plc_thread:
             pld_led_status = power_loss_test()
             TheLogger.debug(pld_led_message(pld_led_status))
-            if pld_led_status == PLDLedEnumClass.red:
-                BattaryCapacity = read_capacity(bus)
+            if pld_led_status != PLDLedEnumClass.off:
+                ReadingState, BattaryCapacity = read_capacity(bus)
+                if ReadingState == ReadT208ResultEnumClass.is_correct:
+                    if pld_led_status == PLDLedEnumClass.red:
+                        TheLogger.warning("AC Power Loss OR Power Adapter Failure. Battery:%5i%%" % BattaryCapacity)
+                        if BattaryCapacity < Configuration.CriticalCapacity:
+                            TheLogger.error("The battery is too low. Battery:%5i%%" % BattaryCapacity)
+                            is_time_to_stop = True
+                            # exit()
+                            break
+                    else:
+                        if pld_led_status == PLDLedEnumClass.blink:
+                            TheLogger.debug("PLD led is blinking. It isn't normal state. Battery:%5i%%" % BattaryCapacity)
+            # if pld_led_status == PLDLedEnumClass.red:
+            #     ReadingState, BattaryCapacity = read_capacity(bus)
 
-                TheLogger.warning("AC Power Loss OR Power Adapter Failure. Battery:%5i%%" % BattaryCapacity)
+            #     TheLogger.warning("AC Power Loss OR Power Adapter Failure. Battery:%5i%%" % BattaryCapacity)
 
-                if BattaryCapacity < Configuration.CriticalCapacity:
-                    TheLogger.error("The battery is too low. Battery:%5i%%" % BattaryCapacity)
-                    is_time_to_stop = True
-                    # exit()
-                    break
-            else:
-                if pld_led_status == PLDLedEnumClass.blink:
-                    BattaryCapacity = read_capacity(bus)
-                    TheLogger.debug("PLD led is blinking. It isn't normal state. Battery:%5i%%" % BattaryCapacity)
-                else:
-                    if pld_led_status == PLDLedEnumClass.off:
-                        pass
+            #     if BattaryCapacity < Configuration.CriticalCapacity:
+            #         TheLogger.error("The battery is too low. Battery:%5i%%" % BattaryCapacity)
+            #         is_time_to_stop = True
+            #         # exit()
+            #         break
+            # else:
+            #     if pld_led_status == PLDLedEnumClass.blink:
+            #         BattaryCapacity = read_capacity(bus)
+            #         TheLogger.debug("PLD led is blinking. It isn't normal state. Battery:%5i%%" % BattaryCapacity)
+            #     else:
+            #         if pld_led_status == PLDLedEnumClass.off:
+            #             pass
             time.sleep(Configuration.SleepTime)
     except Exception as exception:
         exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -410,7 +502,7 @@ def udp_server():
         else:
             if received_str == "charge":
                 bus = smbus.SMBus(1)
-                msg = "Voltage:%5.2fV " % read_voltage(bus) + "Battery:%5i%%" % read_capacity(bus)
+                msg = GetVoltage(bus) + " " + GetCapacity(bus)
             else:
                 msg = "Ready"
         TheLogger.debug(msg)
