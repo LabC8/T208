@@ -56,7 +56,9 @@ class PLDLedEnumClass (Enum):
     """red -- T208 is not plugged to the mains
     """
     blink = 3
-    """blink -- It is undocumented state of plugged T208. Happens occasionally, frequient after a power outage
+    """blink -- It is undocumented state of plugged T208.
+    Happens occasionally, frequient after a power outage.
+    Perhaps this is due to the fact that I use the Jetson Nano from the Yahboom manufacturer.
     """
 
 class ReadT208ResultEnumClass (Enum):
@@ -286,7 +288,7 @@ def power_loss_test() -> PLDLedEnumClass:
     """
     TEST_REPEATS = 10
     counter = 0
-    # To recognize blinking state, have to get information TEST_REPEATS times
+    # To recognize blinking state, have to get information {TEST_REPEATS} times
     for i in range(TEST_REPEATS):
         if GPIO.input(GPIO_PORT) != 0:
             counter += 1
