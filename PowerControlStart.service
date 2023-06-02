@@ -1,17 +1,17 @@
 [Unit]
-Description=<Start PowerControl.py script from systemd>
+Description=Start PowerControl.py script from systemd
 After=network.target
 
 [Service]
 Type=simple
-User=jetson
-Group=jetson
+User=root
+Group=root
 
-Environment=PYTHONPATH=/home/jetson/T208
 WorkingDirectory=/home/jetson/T208
-ExecStart=/usr/bin/pyton3 /home/jetson/T208/PowerControl.py
+ExecStart=/home/jetson/T208/PowerControl.py
 Restart=always
 RestartSec=5
 
 [Install]
 WantedBy=network.target
+
