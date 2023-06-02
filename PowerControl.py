@@ -88,7 +88,7 @@ class CfgReadResultEnumClass (Enum):
     """Configuration file hasn't JSON structure
     """
     is_incorrect = auto()
-    """Configuration fule doesn't correlate to JSON scheme
+    """Configuration file doesn't correlate to JSON scheme
     """
     unknown = auto()
     """Something unusual happened.
@@ -122,20 +122,15 @@ class Configuration:
         self.UdpPort = UDP_PORT
         self.UdpHost = UDP_HOST
 
+class remote_commands(Enum):
+    cmd_reboot = auto()
+    cmd_poweroff = auto()
+    cmd_exit = auto()
 
-# global fullfilename
-# """ Global variables of the configuration
-# ShowInfo -- Flag of logging to the console
-# SleepTime -- Time of holding main control loop after reading information about T208
-# CriticalCapacity -- T208 UPS Low Battery Level
-# UdpPort -- Port of the UDP-server
-# UdpHost -- Address of the UDP-server
-# """
-# global ShowInfo, SleepTime, CriticalCapacity
-# global UdpPort, UdpHost
+
+remote_command: remote_commands
 
 global TheLogger
-
 
 def read_config(config_path: str) -> Union[CfgReadResultEnumClass, str]:
     """read_config  -- Read initial settings. Configuration file has a name "PowerCtrl.cfg" and puts into directory, defined by argument "config_path"
@@ -146,9 +141,6 @@ def read_config(config_path: str) -> Union[CfgReadResultEnumClass, str]:
     Returns:
         Union[CfgReadResultEnumClass, str] -- Information about result of configuration reading in coded and text formats,
     """
-    # global ShowInfo, SleepTime, CriticalCapacity
-    # global UdpPort, UdpHost
-
     cfg_schema = {
         "type": "object",
         "properties": {
@@ -399,6 +391,7 @@ def power_loss_control():
     global is_time_to_stop
     global stop_plc_thread
     global pld_led_status
+    global remote_command
 
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(GPIO_PORT, GPIO.IN)
@@ -412,7 +405,6 @@ def power_loss_control():
         TheLogger.info(GetVoltage(bus))
         TheLogger.info(GetCapacity(bus))
 
-        is_time_to_stop = False
     # Main control loop
         while not stop_plc_thread:
             pld_led_status = power_loss_test()
@@ -425,6 +417,7 @@ def power_loss_control():
                         if BattaryCapacity < Configuration.CriticalCapacity:
                             TheLogger.error("The battery is too low. Battery:%5i%%" % BattaryCapacity)
                             is_time_to_stop = True
+                            remote_command = remote_commands.cmd_poweroff
                             # exit()
                             break
                     else:
@@ -452,8 +445,8 @@ def power_loss_control():
         exc_type, exc_obj, exc_tb = sys.exc_info()
         TheLogger.critical("Stopped with an exception ---" + str(exception) + "--- in line" + str(exc_tb.tb_lineno))
     finally:
-        if is_time_to_stop:
-            TheLogger.warning("System will be shutdowned in 5 seconds.")
+        # if is_time_to_stop:
+        #     TheLogger.warning("System will be shutdowned in 5 seconds.")
         # stop_logging()
         TheLogger.info("~~~~~~~~~ STOP ~~~~~~~~~")
         GPIO.cleanup()
@@ -467,6 +460,8 @@ def udp_server():
     - for command 'charge' sends information about capacity and voltage of battaries
     - for other sends 'Ready' answer
     """
+    global remote_command
+
     global stop_udp_server_thread
     global pld_led_status
     # global UdpPort, UdpHost
@@ -499,16 +494,34 @@ def udp_server():
         received_str = d[0].decode('utf-8')
         addr = d[1]
         TheLogger.debug(received_str)
+
         if received_str == "state":
             msg = pld_led_message(pld_led_status)
+        elif received_str == "charge":
+            bus = smbus.SMBus(1)
+            msg = GetVoltage(bus) + " " + GetCapacity(bus)
+        elif received_str == "poweroff" or received_str == "reboot" or received_str == "exit":
+            global is_time_to_stop
+            global stop_plc_thread
+            global th_control
+            stop_plc_thread = True
+            th_control.join()
+            is_time_to_stop = True
+            if received_str == "poweroff":
+                msg = "Ready to power off"
+                remote_command = remote_commands.cmd_poweroff
+            elif received_str == "reboot":
+                msg = "Ready to reboot"
+                remote_command = remote_commands.cmd_reboot
+            elif received_str == "exit":
+                msg = "Ready to exit"
+                remote_command = remote_commands.cmd_exit
         else:
-            if received_str == "charge":
-                bus = smbus.SMBus(1)
-                msg = GetVoltage(bus) + " " + GetCapacity(bus)
-            else:
-                msg = "Ready"
+            msg = "Ready"
         TheLogger.debug(msg)
         server.sendto(msg.encode('utf-8'), addr)
+        if is_time_to_stop:
+            break
     server.close()
     TheLogger.debug("Udp stopped")
 
@@ -520,6 +533,10 @@ def main():
     """
     global stop_plc_thread, stop_udp_server_thread
     global pld_led_status
+    global th_control, th_udp
+    global remote_command
+    global is_time_to_stop
+
     # global ShowInfo, SleepTime, CriticalCapacity
 
     # Eliminate the chance to run another exemplar of the script.
@@ -565,27 +582,42 @@ def main():
     else:
         TheLogger.debug('Running in a normal Python process')
 
+    is_time_to_stop = False
     try:
         # Create threads and wait keyboard interrupt
         th_control = Thread(target=power_loss_control, daemon=False)
         th_udp = Thread(target=udp_server, daemon=False)
         th_control.start()
         th_udp.start()
-        while True:
-            time.sleep(100)
+        while not is_time_to_stop:
+            time.sleep(Configuration.SleepTime)
     except (KeyboardInterrupt, SystemExit):
         # Set flags to stop thread loops and block threads until finish
-        stop_plc_thread = True
-        stop_udp_server_thread = True
-        th_control.join()
-        th_udp.join()
+        if th_control.is_alive:
+            stop_plc_thread = True
+            th_control.join()
+        if th_udp.is_alive:
+            stop_udp_server_thread = True
+            th_udp.join()
     finally:
         # If need to shut down, stop udp-server thread and send system command "poweroof"
         if is_time_to_stop:
-            stop_udp_server_thread = True
-            th_udp.join()
-            time.sleep(5)
-            os.system("poweroff")
+            if th_control.is_alive:
+                stop_plc_thread = True
+                th_control.join()
+            if th_udp.is_alive:
+                stop_udp_server_thread = True
+                th_udp.join()
+            if remote_command == remote_commands.cmd_poweroff:
+                TheLogger.warning("System will be shutdowned in 5 seconds.")
+                time.sleep(5)
+                # os.system("poweroff")
+            elif remote_command == remote_commands.cmd_reboot:
+                TheLogger.warning("System will be rebooted in 5 seconds.")
+                time.sleep(5)
+                # os.system("reboot")
+            elif remote_command == remote_commands.cmd_exit:
+                TheLogger.debug("Ordinary exit")
         else:
             TheLogger.debug("Ordinary exit")
 
