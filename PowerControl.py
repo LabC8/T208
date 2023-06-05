@@ -35,6 +35,7 @@ from tendo import singleton
 from typing import Union
 
 SHOW_INFO = True
+REMOTE_CONTROL = False
 SLEEP_TIME = 5
 CRITICAL_CAPACITY = 20
 UDP_PORT = 7777
@@ -101,6 +102,9 @@ class Configuration:
     ShowInfo : bool
     """ Flag of logging to the console
     """
+    RemoteControl : bool
+    """ Remote control flag
+    """
     SleepTime : float
     """ Time of holding main control loop after reading information about T208
     """
@@ -117,6 +121,7 @@ class Configuration:
         """__init__ Initilize configuration varyables by default
         """
         self.ShowInfo = SHOW_INFO
+        self.RemoteControl = REMOTE_CONTROL
         self.SleepTime = SLEEP_TIME
         self.CriticalCapacity = CRITICAL_CAPACITY
         self.UdpPort = UDP_PORT
@@ -147,6 +152,9 @@ def read_config(config_path: str) -> Union[CfgReadResultEnumClass, str]:
             "show info": {
                 "type": "boolean"
             },
+            "remote control": {
+                "type": "boolean"
+            },
             "sleep time": {
                 "type": "number",
                 "minimum": 0,
@@ -167,7 +175,7 @@ def read_config(config_path: str) -> Union[CfgReadResultEnumClass, str]:
                 "format": "ip-address"
             }
         },
-        "required": ["show info", "sleep time",
+        "required": ["show info", "remote control", "sleep time",
                      "critical capacity", "udp port", "udp host"],
         "additionalProperties": False
     }
@@ -211,6 +219,7 @@ def read_config(config_path: str) -> Union[CfgReadResultEnumClass, str]:
                     return result, error_message
 
                 Configuration.ShowInfo = config.get("show info", SHOW_INFO)
+                Configuration.RemoteControl = config.get("remote control", REMOTE_CONTROL)
                 Configuration.SleepTime = config.get("sleep time", SLEEP_TIME)
                 Configuration.CriticalCapacity = config.get("critical capacity", CRITICAL_CAPACITY)
                 Configuration.UdpPort = config.get("udp port", UDP_PORT)
@@ -501,21 +510,24 @@ def udp_server():
             bus = smbus.SMBus(1)
             msg = GetVoltage(bus) + " " + GetCapacity(bus)
         elif received_str == "poweroff" or received_str == "reboot" or received_str == "exit":
-            global is_time_to_stop
-            global stop_plc_thread
-            global th_control
-            stop_plc_thread = True
-            th_control.join()
-            is_time_to_stop = True
-            if received_str == "poweroff":
-                msg = "Ready to power off"
-                remote_command = remote_commands.cmd_poweroff
-            elif received_str == "reboot":
-                msg = "Ready to reboot"
-                remote_command = remote_commands.cmd_reboot
-            elif received_str == "exit":
-                msg = "Ready to exit"
-                remote_command = remote_commands.cmd_exit
+            if Configuration.RemoteControl:
+                global is_time_to_stop
+                global stop_plc_thread
+                global th_control
+                stop_plc_thread = True
+                th_control.join()
+                is_time_to_stop = True
+                if received_str == "poweroff":
+                    msg = "Ready to power off"
+                    remote_command = remote_commands.cmd_poweroff
+                elif received_str == "reboot":
+                    msg = "Ready to reboot"
+                    remote_command = remote_commands.cmd_reboot
+                elif received_str == "exit":
+                    msg = "Ready to exit"
+                    remote_command = remote_commands.cmd_exit
+            else:
+                msg = "Remote control is prohibited"
         else:
             msg = "Ready"
         TheLogger.debug(msg)
