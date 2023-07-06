@@ -1,0 +1,31 @@
+How to make PowerControl starts like a service (https://www.shellhacks.com/systemd-service-file-example/):
+
+Lets use systemd:
+1. Create Systemd Service File
+    $ sudo touch /etc/systemd/system/t208.service
+    $ sudo chmod 664 /etc/systemd/system/t208.service
+
+2. Open the /etc/systemd/system/t208.service with vi for example "sudo vi /etc/systemd/system/t208.service" and add the next lines
+    [Unit]
+    Description=T208Daemon
+
+    [Service]
+    #!!!Replace /{PATH}/{TO}/{YOUR}/{T208 DIRECTORY} with your T208 project directory
+    ExecStart=/{PATH}/{TO}/{YOUR}/{T208 DIRECTORY}/dist/PowerControl/PowerControl /home/jetson/T208
+
+    [Install]
+    WantedBy=multi-user.target
+
+3. Once the service file is changed, it needs to reload systemd configuration:
+    $ sudo systemctl daemon-reload
+
+4. Now you should be able to start...
+    $ sudo systemctl start t208.service
+
+5. ...and check the service status
+    $ systemctl status t208.service
+
+    We need to get the status of the service active (running)
+
+6. To configure a service to start automatically on boot, you need to enable it:
+    $ sudo systemctl enable t208.service

@@ -50,8 +50,8 @@ I2C_ADDRESS = 0x36
 class PLDLedEnumClass (Enum):
     """PLDLedEnumClass -- Class defines state of Power Loss Detection (PLD) LED
     """
-    off = 1
-    """off -- T208 is plugged to the mains
+    green = 1
+    """green -- T208 is plugged to the mains
     """
     red = 2
     """red -- T208 is not plugged to the mains
@@ -226,6 +226,7 @@ def read_config(config_path: str) -> Union[CfgReadResultEnumClass, str]:
                 Configuration.UdpHost = config.get("udp host", UDP_HOST)
                 return result, error_message
     else:
+        Configuration.__init__
         error_message = 'Configuration file "' + file_name + '" is missing'
         result = CfgReadResultEnumClass.is_not_exist
         return result, error_message
@@ -272,8 +273,8 @@ def pld_led_message(pld: PLDLedEnumClass) -> str:
     Returns:
         str -- String with PLD status
     """
-    if pld == PLDLedEnumClass.off:
-        return 'PLD status: off'
+    if pld == PLDLedEnumClass.green:
+        return 'PLD status: green'
     if pld == PLDLedEnumClass.blink:
         return 'PLD status: blink'
     if pld == PLDLedEnumClass.red:
@@ -295,7 +296,7 @@ def power_loss_test() -> PLDLedEnumClass:
             counter += 1
         time.sleep(0.01)
     if counter == 0:
-        return PLDLedEnumClass.off
+        return PLDLedEnumClass.green
     else:
         if counter < TEST_REPEATS:
             return PLDLedEnumClass.blink
@@ -418,7 +419,7 @@ def power_loss_control():
         while not stop_plc_thread:
             pld_led_status = power_loss_test()
             TheLogger.debug(pld_led_message(pld_led_status))
-            if pld_led_status != PLDLedEnumClass.off:
+            if pld_led_status != PLDLedEnumClass.green:
                 ReadingState, BattaryCapacity = read_capacity(bus)
                 if ReadingState == ReadT208ResultEnumClass.is_correct:
                     if pld_led_status == PLDLedEnumClass.red:
@@ -447,7 +448,7 @@ def power_loss_control():
             #         BattaryCapacity = read_capacity(bus)
             #         TheLogger.debug("PLD led is blinking. It isn't normal state. Battery:%5i%%" % BattaryCapacity)
             #     else:
-            #         if pld_led_status == PLDLedEnumClass.off:
+            #         if pld_led_status == PLDLedEnumClass.green:
             #             pass
             time.sleep(Configuration.SleepTime)
     except Exception as exception:
@@ -510,6 +511,8 @@ def udp_server():
             bus = smbus.SMBus(1)
             msg = GetVoltage(bus) + " " + GetCapacity(bus)
         elif received_str == "poweroff" or received_str == "reboot" or received_str == "exit":
+            msg = "Remote control command '" + received_str + "' was received"
+            server.sendto(msg.encode('utf-8'), addr)
             if Configuration.RemoteControl:
                 global is_time_to_stop
                 global stop_plc_thread
@@ -557,7 +560,7 @@ def main():
     except:
         sys.exit()
 
-    pld_led_status = PLDLedEnumClass.off
+    pld_led_status = PLDLedEnumClass.green
     stop_plc_thread = False
 
     # Get path for log file and config file
@@ -623,11 +626,11 @@ def main():
             if remote_command == remote_commands.cmd_poweroff:
                 TheLogger.warning("System will be shutdowned in 5 seconds.")
                 time.sleep(5)
-                # os.system("poweroff")
+                os.system("poweroff")
             elif remote_command == remote_commands.cmd_reboot:
                 TheLogger.warning("System will be rebooted in 5 seconds.")
                 time.sleep(5)
-                # os.system("reboot")
+                os.system("reboot")
             elif remote_command == remote_commands.cmd_exit:
                 TheLogger.debug("Ordinary exit")
         else:

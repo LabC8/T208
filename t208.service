@@ -1,0 +1,8 @@
+[Unit]
+Description=T208Daemon
+
+[Service]
+ExecStart=/home/jetson/T208/dist/PowerControl/PowerControl /home/jetson/T208
+
+[Install]
+WantedBy=multi-user.target
