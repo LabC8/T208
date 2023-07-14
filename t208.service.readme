@@ -1,4 +1,13 @@
+I.
+If we want to use PowerControl with Jetson Nano power off capability, we have to use visudo and add our programm:
+{MY_USER_NAME} ALL=NOPASSWD: /{PATH}/{TO}/{YOUR}/{T208 DIRECTORY}/PowerControl/PowerControl
+!!!TO DO try to add (root) like this myusername ALL = (root) NOPASSWD: /path/to/my/program
+
+II.
 How to make PowerControl starts like a service (https://www.shellhacks.com/systemd-service-file-example/):
+
+Lets add visudo with
+jetson ALL=NOPASSWD: /home/jetson/T208/dist/PowerControl/PowerControl
 
 Lets use systemd:
 1. Create Systemd Service File

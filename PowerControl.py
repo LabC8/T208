@@ -96,7 +96,7 @@ class CfgReadResultEnumClass (Enum):
     """
 
 
-class Configuration:
+class c_Configuration:
     """ Configuration variables
     """
     ShowInfo : bool
@@ -134,6 +134,7 @@ class remote_commands(Enum):
 
 
 remote_command: remote_commands
+Configuration: c_Configuration
 
 global TheLogger
 
@@ -179,6 +180,7 @@ def read_config(config_path: str) -> Union[CfgReadResultEnumClass, str]:
                      "critical capacity", "udp port", "udp host"],
         "additionalProperties": False
     }
+    global Configuration
 
     result: CfgReadResultEnumClass
     result = CfgReadResultEnumClass.is_not_exist
@@ -226,7 +228,6 @@ def read_config(config_path: str) -> Union[CfgReadResultEnumClass, str]:
                 Configuration.UdpHost = config.get("udp host", UDP_HOST)
                 return result, error_message
     else:
-        Configuration.__init__
         error_message = 'Configuration file "' + file_name + '" is missing'
         result = CfgReadResultEnumClass.is_not_exist
         return result, error_message
@@ -239,6 +240,7 @@ def create_logger(log_path: str):
         log_path {string} -- Log file path
     """
     global TheLogger #, ShowInfo
+    global Configuration
     TheLogger = logging.getLogger(__name__)
 
     """ Create handlers """
@@ -402,6 +404,7 @@ def power_loss_control():
     global stop_plc_thread
     global pld_led_status
     global remote_command
+    global Configuration
 
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(GPIO_PORT, GPIO.IN)
@@ -551,8 +554,9 @@ def main():
     global th_control, th_udp
     global remote_command
     global is_time_to_stop
-
+    global Configuration
     # global ShowInfo, SleepTime, CriticalCapacity
+    Configuration = c_Configuration()
 
     # Eliminate the chance to run another exemplar of the script.
     try:
