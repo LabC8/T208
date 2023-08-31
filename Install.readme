@@ -1,0 +1,26 @@
+To install and use our script let's follow the next steps:
+1.1) Clone the code:
+	git clone -b debug https://github.com/LabC8/T208.git {T208_FOLDER_NAME}
+#git clone -b debug http://192.168.201.251:3000/LabC8/T208.git {T208_FOLDER_NAME}
+1.2) Install necessary packages:
+	sudo pip install Jetson.GPIO
+	pip3 install smbus
+	pip3 install jsonschema
+	pip3 install tendo
+1.3) And run script:
+	python3 {T208_FOLDER_NAME}/PowerControl.py
+
+Before executing step 1.2 you may want to install script into virtual environment like "venv", but it is not good idea to put our script inside virtual environment venv because of necessity to install one of python package from sudo. 
+If you install a package with sudo, it ignore $PATH environment variable and the package is placed in usr/bin instead of VENV/bin.
+We can follow the next steps instead of step 1.2), but it is not good practise:
+
+1.2.1) Create and activate our virtual environment
+	cd {T208_FOLDER_NAME}
+	python3 -m venv T208.venv
+	source {T208_FOLDER_NAME}/T208.venv/bin/activate
+1.2.2) Install necessary packages:
+	pip3 install -r {T208_FOLDER_NAME}/requirements.txt
+1.2.3) Allow all to write and read gpiochip. 
+Attantion. This command will cause the following message to show "{T208_FOLDER_NAME}/T208.venv/lib/python3.6/site-packages/Jetson/GPIO/gpio_event.py:182: RuntimeWarning: Event not found". 
+Script shows it at execution of instruction "GPIO.cleanup()" before finish as in case venv is active, so in case venv was disactivated. Maybe there is a better solution, but I didn't look for it.
+	sudo chmod a+rw /dev/gpiochip*
