@@ -13,7 +13,7 @@ To install and use our script let's follow the next steps:
 <details>
 <summary>Attention!</summary> 
 You must use your own T208 script path. {T208_FOLDER_NAME} is only alias. In my case e.g. it is */home/jetson/T208*
-<details>
+</details>
 ```
 $ git clone -b debug https://github.com/LabC8/T208.git {T208_FOLDER_NAME}
 ```
@@ -21,7 +21,7 @@ $ git clone -b debug https://github.com/LabC8/T208.git {T208_FOLDER_NAME}
 <details>
 <summary>Remark</summary> 
 I hadn't to install `Jetson.GPIO` module, it had been installed on my Jetson Nano by default.
-<details>
+</details>
 ```
 $ sudo pip install Jetson.GPIO
 $ pip3 install smbus
