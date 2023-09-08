@@ -3,7 +3,7 @@
 ## 1 Introduction
 The script periodecly checks if [Geekworm T208](https://wiki.geekworm.com/T208) is plugged to the mains, and it's battary capacity and voltage.
 The script turns off power of Jetson when T208 battary capacity reaches setting low level and it lost a power outage.
-Information about the state of device, if necessary, available by UDP.!!!!!!!!!
+Information about the state of device, if necessary, available by UDP. Simple script to control by UDP located in this repository and named *udp_client.py*
 
 Some functions were get from [Geekworm T208 Software page](https://wiki.geekworm.com/T208-Software). Strongly recommended to read the webpage before using this script.
 
@@ -65,7 +65,7 @@ $ sudo visudo
 ```
 and add our program *PowerControl* into sudoers module, inserting the line `jetson ALL=NOPASSWD: {T208_FOLDER_NAME}/T208/dist/PowerControl/PowerControl` into the end of the file.
 
-### 3.3 Create a systemd servic
+### 3.3 Create a systemd service
 Then we will create a systemd service file that will allow us to control our service [accordingly with the example] (https://www.shellhacks.com/systemd-service-file-example/)
 
 Create Systemd Service File
@@ -75,7 +75,7 @@ $ sudo chmod 664 /etc/systemd/system/t208.service
 ```
 Open the /etc/systemd/system/t208.service with a text editor (e.g. vi): 
 ```
-$ sudo vi /etc/systemd/system/t208.service" 
+$ sudo vi /etc/systemd/system/t208.service
 ```
 and add the next lines
 ```
