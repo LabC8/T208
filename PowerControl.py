@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
 Control script for Geekworm T208 UPS (https://wiki.geekworm.com/T208) for Jatson Nano.
-Some functions were get from https://wiki.geekworm.com/T208-Software. Strongly recommended to read the webpage before using this script.
-The script periodecly checks if the device is plugged to the mains, and it's battary capacity and voltage.
-The script turns off power of Jetson when T208 battary capacity reaches setting low level and it lost a power outage.
+Some functions were taken from https://wiki.geekworm.com/T208-Software. Strongly recommended to read the webpage before using this script.
+The script periodecally checks if the device is plugged to the mains, and it's battery capacity and voltage.
+The script turns off power of Jetson when T208 battery capacity reaches setting low level and it lost a power outage.
 Information about the state of device, if necessary, available by UDP.
 
-Script needs the next modules, who install with pip3 (of course you have to install pip3 before):
-pip3 install RPi.GPIO -- I hadn't to install this module, it had been installed on my Jetson Nano by default
+Script needs the next modules, which get installed with pip3 (of course you have to install pip3 before):
+pip3 install RPi.GPIO -- I didn't have to install this module, it had been installed on my Jetson Nano by default
 sudo pip3 install smbus
 pip3 install jsonschema
 pip3 install tendo
@@ -69,7 +69,7 @@ class ReadT208ResultEnumClass (Enum):
     """T208 returned a value
     """
     is_not_connected = auto()
-    """Could not read from SMBus and was returned errno 121. It possible T208 doesn't connected
+    """Could not read from SMBus and was returned errno 121. It possible T208 isn't connected
     """
     unknown = auto()
     """Something unusual happened.
@@ -308,13 +308,13 @@ def power_loss_test() -> PLDLedEnumClass:
 
 
 def read_voltage(bus: smbus.SMBus) -> Union[ReadT208ResultEnumClass, float]:
-    """read_voltage -- Read current battary voltage
+    """read_voltage -- Read current battery voltage
 
     Arguments:
         bus {smbus.SMBus} -- Number of I2C bus
 
     Returns:
-        Union[ReadT208ResultEnumClass, float] -- State of battary voltage reading and its value
+        Union[ReadT208ResultEnumClass, float] -- State of battery voltage reading and its value
     """
     error_code: ReadT208ResultEnumClass
     error_code = ReadT208ResultEnumClass.is_correct
@@ -336,13 +336,13 @@ def read_voltage(bus: smbus.SMBus) -> Union[ReadT208ResultEnumClass, float]:
         return error_code, voltage
 
 def read_capacity(bus: smbus.SMBus) -> Union[ReadT208ResultEnumClass, int]:
-    """read_capacity -- Read current battary capacity
+    """read_capacity -- Read current battery capacity
 
     Arguments:
         bus {smbus.SMBus} -- Number of I2C bus
 
     Returns:
-        Union[ReadT208ResultEnumClass, int] -- State of battary capacity reading and its value
+        Union[ReadT208ResultEnumClass, int] -- State of battery capacity reading and its value
     """
     error_code: ReadT208ResultEnumClass
     error_code = ReadT208ResultEnumClass.is_correct
@@ -398,7 +398,7 @@ def GetCapacity(bus: smbus.SMBus) -> str:
 
 def power_loss_control():
     """power_loss_control -- Run a loop of control of the UPS state.
-    The loop breaks after T208 lost a power outage and battaries capacity reaches setting low level.
+    The loop breaks after T208 lost a power outage and batteries capacity reaches setting low level.
     """
     global is_time_to_stop
     global stop_plc_thread
@@ -470,7 +470,7 @@ def udp_server():
     """udp_server -- Run udp-server loop
     Udp-server waits command from client and sends an answer:
     - for command 'state' sends information, created with function 'pld_led_message'
-    - for command 'charge' sends information about capacity and voltage of battaries
+    - for command 'charge' sends information about capacity and voltage of batteries
     - for other sends 'Ready' answer
     """
     global remote_command

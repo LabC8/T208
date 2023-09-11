@@ -1,11 +1,11 @@
 # Control script for Geekworm T208 UPS for Jatson Nano.
 
 ## 1 Introduction
-The script periodecly checks if [Geekworm T208](https://wiki.geekworm.com/T208) is plugged to the mains, and it's battary capacity and voltage.
-The script turns off power of Jetson when T208 battary capacity reaches setting low level and it lost a power outage.
+The script periodecly checks if [Geekworm T208](https://wiki.geekworm.com/T208) is plugged to the mains, and it's battery capacity and voltage.
+The script turns off power of Jetson when T208 battery capacity reaches setting low level and it lost a power outage.
 Information about the state of device, if necessary, available by UDP. Simple script to control by UDP located in this repository and named *udp_client.py*
 
-Some functions were get from [Geekworm T208 Software page](https://wiki.geekworm.com/T208-Software). Strongly recommended to read the webpage before using this script.
+Some functions were taken from [Geekworm T208 Software page](https://wiki.geekworm.com/T208-Software). Strongly recommended to read the webpage before using this script.
 
 ## 2 Installation
 To install and use our script let's follow the next steps:
@@ -33,7 +33,7 @@ $ pip3 install tendo
 $ python3 {T208_FOLDER_NAME}/PowerControl.py
 ```
 
-Before executing of step 2.2 you may want to install script into virtual environment like [venv](https://docs.python.org/3/library/venv.html), but it is not good idea to put our script inside virtual environment venv because of necessity to install one of python package from sudo. If you install a package with sudo, it ignore **$PATH** environment variable and the package is placed in *usr/bin* instead of *VENV/bin*.
+Before executing of step 2.2 you may want to install script into virtual environment like [venv](https://docs.python.org/3/library/venv.html), but it is not good idea to put our script inside virtual environment venv because of necessity to install one of python package from sudo. If you install a package with sudo, it ignores **$PATH** environment variable and the package is placed in *usr/bin* instead of *VENV/bin*.
 We can follow the next steps instead of step 2.2 , but it is not good practise:
 
 ### 2.2.1 Create and activate our virtual environment
@@ -50,7 +50,7 @@ $ pip3 install -r {T208_FOLDER_NAME}/requirements.txt
 <details>
 <summary>Attention!</summary> 
 This command will cause the following message to show *"{T208_FOLDER_NAME}/T208.venv/lib/python3.6/site-packages/Jetson/GPIO/gpio_event.py:182: RuntimeWarning: Event not found".*
-Script shows it at execution of instruction `"GPIO.cleanup()"` before finish as in case venv is active, so in case venv was disactivated. Maybe there is a better solution, but I didn't look for it.
+Script shows it at execution of instruction `"GPIO.cleanup()"` before finish in both cases venv is active, and venv was disactivated. Maybe there is a better solution, but I didn't look for it.
 </details>
 ```	
 $ sudo chmod a+rw /dev/gpiochip*
