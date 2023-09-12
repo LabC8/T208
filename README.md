@@ -15,23 +15,15 @@ To install and use our script let's follow the next steps:
 You must use your own T208 script path. {T208_FOLDER_NAME} is only alias. In my case e.g. it is _ /home/jetson/T208 _
 </details> 
 
-> [!NOTE]  
-> Highlights information that users should take into account, even when skimming.
-
 > [!IMPORTANT]  
-> Crucial information necessary for users to succeed.
-
-> [!WARNING]  
-> Critical content demanding immediate user attention due to potential risks.
+> You must use your own T208 script path. {T208_FOLDER_NAME} is only alias. In my case e.g. it is _/home/jetson/T208_
 
 ```
 $ git clone -b debug https://github.com/LabC8/T208.git {T208_FOLDER_NAME}
 ```
 ### 2.2 Install necessary packages:
-<details>
-<summary>Remark</summary> 
-I hadn't to install `Jetson.GPIO` module, it had been installed on my Jetson Nano by default.
-</details> 
+> [!NOTE] 
+> I hadn't to install `Jetson.GPIO` module, it had been installed on my Jetson Nano by default.
 
 ```
 $ sudo pip install Jetson.GPIO
@@ -58,11 +50,9 @@ $ source {T208_FOLDER_NAME}/T208.venv/bin/activate
 $ pip3 install -r {T208_FOLDER_NAME}/requirements.txt
 ```
 ### 2.2.3 Allow all to write and read gpiochip. 
-<details>
-<summary>Attention!</summary> 
-This command will cause the following message to show *"{T208_FOLDER_NAME}/T208.venv/lib/python3.6/site-packages/Jetson/GPIO/gpio_event.py:182: RuntimeWarning: Event not found".*
-Script shows it at execution of instruction `"GPIO.cleanup()"` before finish in both cases venv is active, and venv was disactivated. Maybe there is a better solution, but I didn't look for it.
-</details>
+> [!WARNING]  
+> This command will cause the following message to show *"{T208_FOLDER_NAME}/T208.venv/lib/python3.6/site-packages/Jetson/GPIO/gpio_event.py:182: RuntimeWarning: Event not found".*
+> Script shows it at execution of instruction `"GPIO.cleanup()"` before finish in both cases venv is active, and venv was disactivated. Maybe there is a better solution, but I didn't look for it.
 
 ```	
 $ sudo chmod a+rw /dev/gpiochip*
