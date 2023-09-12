@@ -51,7 +51,7 @@ $ pip3 install -r {T208_FOLDER_NAME}/requirements.txt
 ```
 ### 2.2.3 Allow all to write and read gpiochip. 
 > [!WARNING]  
-> This command will cause the following message to show *"{T208_FOLDER_NAME}/T208.venv/lib/python3.6/site-packages/Jetson/GPIO/gpio_event.py:182: RuntimeWarning: Event not found".*
+> This command will cause the following message to show *"T208_FOLDER_NAME}/T208.venv/lib/python3.6/site-packages/Jetson/GPIO/gpio_event.py:182: RuntimeWarning: Event not found".*
 > Script shows it at execution of instruction `"GPIO.cleanup()"` before finish in both cases venv is active, and venv was disactivated. Maybe there is a better solution, but I didn't look for it.
 
 ```	
