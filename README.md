@@ -12,8 +12,18 @@ To install and use our script let's follow the next steps:
 ### 2.1 Clone the code:
 <details>
 <summary>Attention!</summary> 
-You must use your own T208 script path. {T208_FOLDER_NAME} is only alias. In my case e.g. it is */home/jetson/T208*
-</details>
+You must use your own T208 script path. {T208_FOLDER_NAME} is only alias. In my case e.g. it is _ /home/jetson/T208 _
+</details> 
+
+> [!NOTE]  
+> Highlights information that users should take into account, even when skimming.
+
+> [!IMPORTANT]  
+> Crucial information necessary for users to succeed.
+
+> [!WARNING]  
+> Critical content demanding immediate user attention due to potential risks.
+
 ```
 $ git clone -b debug https://github.com/LabC8/T208.git {T208_FOLDER_NAME}
 ```
@@ -21,7 +31,8 @@ $ git clone -b debug https://github.com/LabC8/T208.git {T208_FOLDER_NAME}
 <details>
 <summary>Remark</summary> 
 I hadn't to install `Jetson.GPIO` module, it had been installed on my Jetson Nano by default.
-</details>
+</details> 
+
 ```
 $ sudo pip install Jetson.GPIO
 $ pip3 install smbus
@@ -52,6 +63,7 @@ $ pip3 install -r {T208_FOLDER_NAME}/requirements.txt
 This command will cause the following message to show *"{T208_FOLDER_NAME}/T208.venv/lib/python3.6/site-packages/Jetson/GPIO/gpio_event.py:182: RuntimeWarning: Event not found".*
 Script shows it at execution of instruction `"GPIO.cleanup()"` before finish in both cases venv is active, and venv was disactivated. Maybe there is a better solution, but I didn't look for it.
 </details>
+
 ```	
 $ sudo chmod a+rw /dev/gpiochip*
 ```
@@ -63,7 +75,11 @@ Then if we want to use PowerControl with power off capability, we have to use [v
 ```
 $ sudo visudo
 ```
-and add our program *PowerControl* into sudoers module, inserting the line `jetson ALL=NOPASSWD: {T208_FOLDER_NAME}/T208/dist/PowerControl/PowerControl` into the end of the file.
+and add our program *PowerControl* into sudoers module, inserting the line
+```
+jetson ALL=NOPASSWD: {T208_FOLDER_NAME}/T208/dist/PowerControl/PowerControl
+``` 
+into the end of the file.
 
 ### 3.3 Create a systemd service
 Then we will create a systemd service file that will allow us to control our service [accordingly with the example] (https://www.shellhacks.com/systemd-service-file-example/)
